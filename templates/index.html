@@ -1,0 +1,82 @@
+
+<!-- Model upload form -->
+<form action="/upload_model" method="post" enctype="multipart/form-data" class="mb-4">
+    <label for="model_file" class="form-label">Upload New Model (.pkl):</label>
+    <input type="file" class="form-control" id="model_file" name="model_file" accept=".pkl">
+    <button type="submit" class="btn btn-success mt-2">Upload Model</button>
+</form>
+
+<!-- Model selection dropdown -->
+<form action="/" method="get" class="mb-4">
+    <label for="selected_model" class="form-label">Select Model:</label>
+    <select class="form-select" id="selected_model" name="selected_model" required>
+        {% for model in model_list %}
+            <option value="{{ model }}" {% if model == selected_model %}selected{% endif %}>{{ model }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary mt-2">Use This Model</button>
+</form>
+
+{% if model_loaded %}
+<div class="alert alert-success">Model loaded and ready for prediction.</div>
+{% else %}
+<div class="alert alert-warning">No model loaded. Please upload a model to enable prediction.</div>
+{% endif %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Heart Disease Predictor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="mb-4">Heart Disease Predictor</h2>
+    <form action="/predict" method="post">
+        <input type="hidden" name="selected_model" value="{{ selected_model }}">
+        <div class="row">
+            <div class="mb-3 col-md-4">
+                <label for="age" class="form-label">Age (e.g., 45)</label>
+                <input type="number" class="form-control" id="age" name="age" required>
+            </div>
+            <div class="mb-3 col-md-4">
+                <label for="cp" class="form-label">Chest Pain Type (0 = Typical Angina, 1 = Atypical Angina, 2 = Non-anginal Pain, 3 = Asymptomatic)</label>
+                <input type="number" min="0" max="3" class="form-control" id="cp" name="cp" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-4">
+                <label for="trestbps" class="form-label">Resting Blood Pressure (in mm Hg, e.g., 130)</label>
+                <input type="number" class="form-control" id="trestbps" name="trestbps" required>
+            </div>
+            <div class="mb-3 col-md-4">
+                <label for="chol" class="form-label">Serum Cholesterol (in mg/dl, e.g., 250)</label>
+                <input type="number" class="form-control" id="chol" name="chol" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-4">
+                <label for="thalach" class="form-label">Max Heart Rate Achieved (e.g., 160)</label>
+                <input type="number" class="form-control" id="thalach" name="thalach" required>
+            </div>
+            <div class="mb-3 col-md-4">
+                <label for="exang" class="form-label">Exercise Induced Angina (1 = Yes, 0 = No)</label>
+                <input type="number" min="0" max="1" class="form-control" id="exang" name="exang" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-4">
+                <label for="oldpeak" class="form-label">Oldpeak (ST depression induced by exercise, e.g., 1.4)</label>
+                <input type="number" step="0.1" class="form-control" id="oldpeak" name="oldpeak" required>
+            </div>
+            <div class="mb-3 col-md-4">
+                <label for="slope" class="form-label">Slope of the Peak Exercise ST Segment (0 = Upsloping, 1 = Flat, 2 = Downsloping)</label>
+                <input type="number" min="0" max="2" class="form-control" id="slope" name="slope" required>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Predict</button>
+    </form>
+</div>
+</body>
+</html>
